@@ -397,13 +397,52 @@
         let questionsAnswered = 0;
         let currentAnswer = 0;
         
-        const achievements = [
-            { title: "Quick Learner!", grade: "B+", desc: "Great start! Keep practicing!" },
-            { title: "Math Enthusiast!", grade: "A-", desc: "You're getting the hang of this!" },
-            { title: "Problem Solver!", grade: "A", desc: "Excellent mathematical thinking!" },
-            { title: "Math Master!", grade: "A+", desc: "Outstanding! You're a true math champion!" },
-            { title: "Calculation Genius!", grade: "A++", desc: "Incredible! Your skills are amazing!" }
-        ];
+const achievements = [
+    // F Grade - Encouraging messages for beginners
+    { title: "Math Explorer!", grade: "F", desc: "Every expert was once a beginner - keep going!" },
+    { title: "Starting Strong!", grade: "F", desc: "Don't give up! Practice makes perfect!" },
+    { title: "On Your Way!", grade: "F", desc: "Every step counts - you're learning!" },
+    
+    // D Grade - Building confidence
+    { title: "Getting Warmed Up!", grade: "D", desc: "You're making progress - keep trying!" },
+    { title: "Building Skills!", grade: "D", desc: "Rome wasn't built in a day - keep practicing!" },
+    { title: "Finding Your Rhythm!", grade: "D", desc: "You're on the right track - don't stop now!" },
+    
+    // C Grade - Steady progress
+    { title: "Making Progress!", grade: "C", desc: "You're getting there - persistence pays off!" },
+    { title: "Steady Learner!", grade: "C", desc: "Great effort! Keep pushing forward!" },
+    { title: "Half Way There!", grade: "C", desc: "You're improving with each try!" },
+    
+    // B- Grade - Good improvement
+    { title: "Nice Work!", grade: "B-", desc: "You're really getting the hang of this!" },
+    { title: "Skills Developing!", grade: "B-", desc: "Good progress - you're on fire!" },
+    
+    // B Grade - Solid performance
+    { title: "Well Done!", grade: "B", desc: "Solid work! Your dedication is showing!" },
+    { title: "Good Thinking!", grade: "B", desc: "You're demonstrating real skill!" },
+    
+    // B+ Grade - Very good
+    { title: "Quick Learner!", grade: "B+", desc: "Great start! Keep practicing!" },
+    { title: "Smart Solver!", grade: "B+", desc: "Impressive work - you're really improving!" },
+    
+    // A- Grade - Excellent
+    { title: "Math Enthusiast!", grade: "A-", desc: "You're getting the hang of this!" },
+    { title: "Strong Performer!", grade: "A-", desc: "Excellent thinking - keep it up!" },
+    
+    // A Grade - Outstanding
+    { title: "Problem Solver!", grade: "A", desc: "Excellent mathematical thinking!" },
+    { title: "Math Wizard!", grade: "A", desc: "Outstanding performance - well done!" },
+    
+    // A+ Grade - Exceptional
+    { title: "Math Master!", grade: "A+", desc: "Outstanding! You're a true math champion!" },
+    { title: "Brilliant Mind!", grade: "A+", desc: "Exceptional work - you're amazing!" },
+    
+    // A++ Grade - Legendary (rare)
+    { title: "Calculation Genius!", grade: "A++", desc: "Incredible! Your skills are legendary!" },
+    { title: "Mathematical Legend!", grade: "A++", desc: "Absolutely phenomenal - you're unstoppable!" },
+    { title: "Numbers Mastermind!", grade: "A++", desc: "Mind-blowing! You're a true genius!" }
+];
+
 
         function generateQuestion() {
             const num1 = Math.floor(Math.random() * 20) + 1;
@@ -500,6 +539,24 @@
             document.getElementById('achievementOverlay').style.display = 'flex';
         }
 
+function selectRandomAchievementSimple(questionsAnswered) {
+    // Much more restrictive scoring - heavily weight towards lower grades
+    const maxIndex = achievements.length - 1;
+    
+    // Base random component heavily weighted toward lower scores
+    const lowGradeBias = Math.random() * 0.7; // 0-0.7, favoring low scores
+    
+    // Progress component that grows slowly and requires many questions
+    const progressComponent = Math.min(questionsAnswered / 50, 1) * 0.3; // Max 0.3 contribution
+    
+    // Add small luck factor (very small chance of high grade with low questions)
+    const luckFactor = Math.random() < 0.05 ? Math.random() * 0.4 : 0; // 5% chance of luck boost
+    
+    const normalizedScore = lowGradeBias + progressComponent + luckFactor;
+    const index = Math.min(Math.floor(normalizedScore * achievements.length), maxIndex);
+    
+    return achievements[index];
+}
         function openChest() {
             const chest = document.getElementById('treasureChest');
             const rewardContent = document.getElementById('rewardContent');
@@ -507,8 +564,7 @@
             chest.classList.add('opened');
             
             setTimeout(() => {
-                const achievementIndex = Math.min(Math.floor(questionsAnswered / 5) - 1, achievements.length - 1);
-                const achievement = achievements[achievementIndex];
+                const achievement = selectRandomAchievementSimple(questionsAnswered)
                 
                 document.getElementById('gradeBadge').textContent = achievement.grade;
                 document.getElementById('achievementTitle').textContent = achievement.title;
